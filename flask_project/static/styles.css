@@ -1,0 +1,89 @@
+body {
+    text-align: center;
+}
+
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+
+.product-card {
+    width: 300px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 8px #ccc;
+}
+
+
+.product-card img {
+    width: 250px;      /* desired width */
+    height: 200px;     /* desired height */
+    object-fit: cover; /* crop/scale nicely */
+    border-radius: 8px;
+}
+
+
+.price {
+    color: green;
+    font-weight: bold;
+}
+
+
+.btn {
+    display: inline-block;
+    padding: 8px 15px;
+    background: #333;
+    color: white;
+    text-decoration: none;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+
+.btn.delete {
+    background: #b30000;
+}
+
+
+.form {
+    width: 400px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #ccc;
+}
+
+
+.form input,
+.form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+}
+
+
+.detail-container {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+}
+
+
+.big-img {
+    height: 200px;
+    object-fit: cover;
+    width: 300px;
+    border-radius: 8px;
+}
+
+
+.info {
+    max-width: 600px;
+}

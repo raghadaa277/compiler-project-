@@ -1,0 +1,43 @@
+### IntelliJ IDEA ###
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+.idea
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+gen/
+src/antlr/JinjaFlaskLexer.java
+src/antlr/JinjaFlaskLexer.interp
+src/antlr/JinjaFlaskLexer.tokens
+src/antlr/JinjaFlaskParser.java
+src/antlr/JinjaFlaskParser.interp
+src/antlr/JinjaFlaskParser.tokens
+src/antlr/JinjaFlaskParserBaseListener.java
+src/antlr/JinjaFlaskParserBaseVisitor.java
+src/antlr/JinjaFlaskParserListener.java
+src/antlr/JinjaFlaskParserVisitor.java
+compiler_project.iml
