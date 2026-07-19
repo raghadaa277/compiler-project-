@@ -12,14 +12,28 @@ body {
 
 
 .product-card {
-    width: 30px;
+    width: white;
     background: white;
     padding: 15px;
     border-radius: 8px;
     text-align: center;
     box-shadow: 0 0 8px #ccc;
 }
+/* المحدد مكتوب هنا أول مرة */
+.nav-link {
+    color: blue;
+}
 
+/* تم تكرار نفس المحدد لاحقاً في مكان آخر */
+.nav-link {
+    font-size: 16px;
+}
+
+
+/* مجموعة فارغة (تسبب تحذيراً) */
+.card-title {
+
+}
 
 .product-card img {
     width: 250px;      /* desired width */
@@ -30,7 +44,7 @@ body {
 
 
 .price {
-    color: green;
+    colr: green;
     font-weight: bold;
 }
 

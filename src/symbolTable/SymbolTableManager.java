@@ -51,8 +51,7 @@ public enum SymbolTableManager {
         }
         return null;
     }
-    public void reset() {
-        root = new SymbolTable(null, "Global");
+    public void resetToGlobal() {
         currentScope = root;
     }
 
@@ -66,6 +65,44 @@ public enum SymbolTableManager {
             SymbolEntry entry = temp.lookup(name);
             if (entry != null) return entry;
             temp = temp.getParent();
+        }
+        return null;
+    }
+
+    public boolean delete(String name) {
+        return currentScope.delete(name);
+    }
+
+    public SymbolEntry update(String name, String key, Object value) {
+        return currentScope.update(name, key, value);
+    }
+
+    public SymbolEntry lookupCurrentScope(String name) {
+        return currentScope.lookup(name);
+    }
+
+    public String getCurrentScopeName() {
+        return currentScope.getScopeName();
+    }
+
+    public SymbolTable getCurrentScope() {
+        return currentScope;
+    }
+
+    public SymbolTable getRoot() {
+        return root;
+    }
+
+    public SymbolEntry searchAllScopes(String name) {
+        return searchRecursive(root, name);
+    }
+
+    private SymbolEntry searchRecursive(SymbolTable table, String name) {
+        SymbolEntry entry = table.lookup(name);
+        if (entry != null) return entry;
+        for (SymbolTable child : table.getChildren()) {
+            entry = searchRecursive(child, name);
+            if (entry != null) return entry;
         }
         return null;
     }
@@ -87,15 +124,5 @@ public enum SymbolTableManager {
         for (SymbolTable child : table.getChildren()) {
             printScope(child, level + 1);
         }
-    }
-
-    public boolean isDefinedLocally(String name) {
-        if (currentScope == null) return false;
-        return currentScope.containsLocally(name);
-    }
-
-    public SymbolEntry lookupLocally(String name) {
-        if (currentScope == null) return null;
-        return currentScope.lookup(name);
     }
 }

@@ -42,24 +42,35 @@ public class SymbolTable {
         table.clear();
     }
 
+    public boolean delete(String name) {
+        if (table.containsKey(name)) {
+            table.remove(name);
+            return true;
+        }
+        return false;
+    }
+
+    public SymbolEntry update(String name, String key, Object value) {
+        SymbolEntry entry = table.get(name);
+        if (entry != null) {
+            entry.setAttribute(key, value);
+        }
+        return entry;
+    }
+
 
     public SymbolEntry lookup(String name) {
         return table.get(name);
     }
 
     public SymbolEntry insert(String name) {
-        if (table.containsKey(name)) {
-            return table.get(name);
-        }
+
 
         SymbolEntry entry = new SymbolEntry(name);
         table.put(name, entry);
         return entry;
     }
 
-    public boolean containsLocally(String name) {
-        return table.containsKey(name);
-    }
 
     public void setAttribute(String name, String key, Object value) {
         SymbolEntry entry = lookup(name);
@@ -70,7 +81,7 @@ public class SymbolTable {
         entry.setAttribute(key, value);
     }
 
-
+    // get_attribute: retrieve attribute of entry
     public Object getAttribute(String name, String key) {
         SymbolEntry entry = lookup(name);
         if (entry == null) {
@@ -80,25 +91,39 @@ public class SymbolTable {
         return entry.getAttribute(key);
     }
 
-
+    // symbolTable/SymbolTable.java
     public void printCurrentTable(String indent) {
         if (table.isEmpty()) {
-            System.out.println(indent + "(No Symbols Declared)");
+            System.out.println(indent + "(Empty Scope)");
             return;
         }
-        System.out.println(indent + "----------------------------------------------------");
-        System.out.println(indent + String.format("%-20s | %-15s | %s", "Symbol Name", "Type", "Attributes"));
-        System.out.println(indent + "----------------------------------------------------");
+        int nameWidth = 20;
+        for (String key : table.keySet()) {
+            if (key.length() + 2 > nameWidth) {
+                nameWidth = key.length() + 2;
+            }
+        }
+        System.out.println(indent + "-".repeat(90));
+        System.out.println(indent + String.format(" %-" + nameWidth + "s | %-15s | %s", "Symbol Name", "Type", "Attributes"));
+        System.out.println(indent + "-".repeat(90));
 
         for (Map.Entry<String, SymbolEntry> entry : table.entrySet()) {
             SymbolEntry symbolEntry = entry.getValue();
             Object type = symbolEntry.getAttribute("Type");
             Object value = symbolEntry.getAttribute("Value");
 
-            System.out.println(indent + String.format("%-20s | %-15s | %s",
+            String valueStr = (value != null ? value.toString() : "null");
+            String[] valueLines = valueStr.split("\n");
+
+            System.out.println(indent + String.format(" %-" + nameWidth + "s | %-15s | %s",
                     entry.getKey(),
                     (type != null ? type : "null"),
-                    (value != null ? value : "null")));
+                    valueLines[0].trim()));
+
+            for (int i = 1; i < valueLines.length; i++) {
+                System.out.println(indent + String.format(" %-" + nameWidth + "s | %-15s | %s",
+                        "", "", valueLines[i].trim()));
+            }
         }
         System.out.println();
     }
