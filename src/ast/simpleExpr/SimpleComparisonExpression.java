@@ -3,7 +3,7 @@ package ast.simpleExpr;
 import ast.condition.Condition;
 
 public class SimpleComparisonExpression extends SimpleExpression {
-    private Condition condition;
+    public Condition condition;
 
     public SimpleComparisonExpression(int line_number) {
         super("SimpleComparisonExpression", line_number);

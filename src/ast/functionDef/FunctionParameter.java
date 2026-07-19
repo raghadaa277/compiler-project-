@@ -4,7 +4,7 @@ import ast.ASTNode;
 import ast.atom.Atom;
 
 public class FunctionParameter extends ASTNode {
-    private String id;
+    public String id;
     private Atom value;
 
     public FunctionParameter(int line_number) {

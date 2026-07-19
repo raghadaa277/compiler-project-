@@ -5,7 +5,7 @@ import ast.compundStmt.CompoundStatement;
 import ast.compundStmt.PythonExpression;
 
 public abstract class AssignmentStatement extends CompoundStatement {
-    private PythonExpression var;
+    public PythonExpression var;
     public AssignmentStatement(String node_name, int line_number) {
         super(node_name, line_number);
     }

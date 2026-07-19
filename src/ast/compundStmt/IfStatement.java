@@ -8,10 +8,10 @@ import ast.Statement;
 import java.util.List;
 
 public class IfStatement extends CompoundStatement {
-    private Condition condition;
-    private Statement statement;
-    private List<ElIfStatement> elifStatements;
-    private Statement elseStatement;
+    public Condition condition;
+    public Statement statement;
+    public List<ElIfStatement> elifStatements;
+    public Statement elseStatement;
 
     public IfStatement(int line_number) {
         super("IfStatement", line_number);

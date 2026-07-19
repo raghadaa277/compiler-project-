@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FunctionCall extends AtomExpression {
 
-    private ArgumentsList argumentsList;
+    public ArgumentsList argumentsList;
 
     public FunctionCall(int line_number) {
         super("FunctionCall", line_number);

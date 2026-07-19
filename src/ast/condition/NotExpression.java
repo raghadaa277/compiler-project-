@@ -4,7 +4,7 @@ import ast.Consts;
 import ast.compundStmt.PythonExpression;
 
 public class NotExpression extends Condition {
-    private PythonExpression pythonExpression;
+    public PythonExpression pythonExpression;
 
     public NotExpression(int line_number) {
         super("NotExpression", line_number);

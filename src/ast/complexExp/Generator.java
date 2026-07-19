@@ -3,7 +3,7 @@ package ast.complexExp;
 import ast.compundStmt.ForLoop;
 
 public class Generator extends ComplexExpression{
-    private ForLoop forLoop;
+    public ForLoop forLoop;
     public Generator(int line_number) {
         super("Generator", line_number);
     }

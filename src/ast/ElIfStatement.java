@@ -3,8 +3,8 @@ package ast;
 import ast.condition.Condition;
 
 public class ElIfStatement extends ASTNode {
-    private Condition condition;
-    private Statement statement;
+    public Condition condition;
+    public Statement statement;
 
     public ElIfStatement(int line_number) {
         super("ElIfStatement", line_number);

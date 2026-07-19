@@ -3,7 +3,7 @@ package ast.assignStmt;
 import ast.arithmeticExpr.ArithmeticExpression;
 
 public class ArithmeticAssignStatement extends AssignmentStatement {
-    private ArithmeticExpression value;
+    public ArithmeticExpression value;
     public ArithmeticAssignStatement(int line_number) {
         super("ArithmeticAssignStatement", line_number);
     }

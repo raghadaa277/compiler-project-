@@ -5,7 +5,7 @@ import ast.atom.Atom;
 import java.util.List;
 
 public class ListLiteral extends ComplexExpression {
-    private List<Atom> listItems;
+    public List<Atom> listItems;
 
     public ListLiteral(int line_number) {
         super("ListLiteral", line_number);

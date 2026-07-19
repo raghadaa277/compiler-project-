@@ -6,8 +6,8 @@ import ast.simpleExpr.SimpleExpression;
 import java.util.List;
 
 public class ArithmeticExpression extends SimpleExpression {
-    private PythonExpression left;
-    private List<PythonExpression> right;
+    public PythonExpression left;
+    public List<PythonExpression> right;
     private String operator;
 
     public ArithmeticExpression(String node_name, int line_number) {

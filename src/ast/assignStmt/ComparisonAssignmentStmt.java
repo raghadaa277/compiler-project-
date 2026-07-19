@@ -2,7 +2,7 @@ package ast.assignStmt;
 
 import ast.condition.Condition;
 public class ComparisonAssignmentStmt extends AssignmentStatement {
-    private Condition value;
+    public Condition value;
 
     public ComparisonAssignmentStmt(int line_number) {
         super("ComparisonAssignStmt", line_number);

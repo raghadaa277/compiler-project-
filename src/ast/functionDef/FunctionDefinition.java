@@ -6,9 +6,9 @@ import ast.compundStmt.CompoundStatement;
 
 public class FunctionDefinition extends CompoundStatement {
     private Decorator decorator;
-    private String functionName;
-    private FunctionParameters functionParameters;
-    private Statement functionBody;
+    public String functionName;
+    public FunctionParameters functionParameters;
+    public Statement functionBody;
 
     public FunctionDefinition(int line_number) {
         super("FunctionDefinition", line_number);

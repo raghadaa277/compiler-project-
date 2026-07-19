@@ -7,8 +7,8 @@ import ast.compundStmt.PythonExpression;
 import java.util.Map;
 
 public class ComparisonExpression extends Condition {
-    private PythonExpression baseExpr;
-    private Map<ComparisonOperator, PythonExpression> operatorPythonExpressionMap;
+    public PythonExpression baseExpr;
+    public Map<ComparisonOperator, PythonExpression> operatorPythonExpressionMap;
 
     public ComparisonExpression(int line_number) {
         super("ComparisonExpression", line_number);
