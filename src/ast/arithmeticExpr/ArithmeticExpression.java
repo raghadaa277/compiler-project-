@@ -8,7 +8,7 @@ import java.util.List;
 public class ArithmeticExpression extends SimpleExpression {
     public PythonExpression left;
     public List<PythonExpression> right;
-    private String operator;
+    public String operator;
 
     public ArithmeticExpression(String node_name, int line_number) {
         super(node_name, line_number);
