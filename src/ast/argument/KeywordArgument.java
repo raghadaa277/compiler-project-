@@ -1,7 +1,7 @@
 package ast.argument;
 
 public class KeywordArgument extends Argument {
-    private String argName;
+    public String argName;
 
     public KeywordArgument(int line_number) {
         super("KeywordArgument", line_number);
