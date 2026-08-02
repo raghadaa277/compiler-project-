@@ -1,7 +1,7 @@
 package ast.jinja.jinjaCallExpr;
 
 public class JinjaFilteredExpression extends JinjaCallExpression{
-    private JinjaVariableAccess jinjaVariableAccess;
+    public JinjaVariableAccess jinjaVariableAccess;
     private String filterName;
     public JinjaFilteredExpression( int line_number) {
         super("JinjaFilteredExpression", line_number);

@@ -4,8 +4,8 @@ import ast.jinja.jinjaCallExpr.JinjaCallExpression;
 
 public class JinjaBinaryExpression extends JinjaExpression {
 
-    private JinjaCallExpression left;
-    private JinjaCallExpression right;
+    public JinjaCallExpression left;
+    public JinjaCallExpression right;
     private String operator;
 
     public JinjaBinaryExpression(int line_number) {

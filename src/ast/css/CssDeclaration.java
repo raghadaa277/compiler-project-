@@ -7,8 +7,8 @@ import ast.cssTerm.CssTerm;
 import java.util.List;
 
 public class CssDeclaration extends ASTNode {
-    private List<CssTerm> cssTermList;
-    private String id;
+    public List<CssTerm> cssTermList;
+    public String id;
 
     public CssDeclaration(int line_number) {
         super("CssDeclaration", line_number);

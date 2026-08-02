@@ -3,8 +3,8 @@ package ast.tagContent;
 import ast.ASTNode;
 
 public class TagElementItem extends ASTNode {
-    private String attributeName;
-    private String attributeValue;
+    public String attributeName;
+    public String attributeValue;
 
     public TagElementItem(int line_number) {
         super("TagContent", line_number);

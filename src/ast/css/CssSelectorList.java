@@ -14,7 +14,16 @@ public class CssSelectorList extends ASTNode {
     public void setSelectors(List<CssSelector> selectors) {
         this.selectors = selectors;
     }
-
+    public String toSelectorString() {
+        StringBuilder sb = new StringBuilder();
+        if (selectors != null) {
+            for (int i = 0; i < selectors.size(); i++) {
+                if (i > 0) sb.append(" ");
+                sb.append(selectors.get(i).toSelectorString());
+            }
+        }
+        return sb.toString();
+    }
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

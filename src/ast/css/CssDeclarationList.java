@@ -5,7 +5,7 @@ import ast.ASTNode;
 import java.util.List;
 
 public class CssDeclarationList extends ASTNode {
-    private List<CssDeclaration> declarations;
+    public List<CssDeclaration> declarations;
     public CssDeclarationList(int line_number) {
         super("CssDeclarationList", line_number);
     }

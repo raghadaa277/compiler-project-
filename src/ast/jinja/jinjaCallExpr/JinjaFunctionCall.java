@@ -3,7 +3,7 @@ package ast.jinja.jinjaCallExpr;
 import ast.jinja.JinjaArgumentsList;
 
 public class JinjaFunctionCall extends JinjaCallExpression {
-    private JinjaArgumentsList argumentsList;
+    public JinjaArgumentsList argumentsList;
     private String functionName;
     public JinjaFunctionCall(int line_number) {
         super("JinjaFunctionCall", line_number);

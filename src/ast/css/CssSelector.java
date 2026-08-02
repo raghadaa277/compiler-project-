@@ -32,6 +32,23 @@ public class CssSelector extends ASTNode {
         this.elementName = elementName;
     }
 
+
+    public String toSelectorString() {
+        StringBuilder sb = new StringBuilder();
+        if (elementName != null && !elementName.isEmpty()) {
+            sb.append(elementName);
+        }
+        if (id != null && !id.isEmpty()) {
+            sb.append("#").append(id);
+        }
+        if (classes != null && !classes.isEmpty()) {
+            for (String className : classes) {
+                sb.append(".").append(className);
+            }
+        }
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

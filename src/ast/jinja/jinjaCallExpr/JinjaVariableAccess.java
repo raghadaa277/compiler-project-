@@ -2,7 +2,7 @@ package ast.jinja.jinjaCallExpr;
 
 
 public class JinjaVariableAccess extends JinjaCallExpression {
-    private String dottedName;
+    public String dottedName;
     public JinjaVariableAccess(int line_number) {
         super("JinjaVariableAccess", line_number);
     }

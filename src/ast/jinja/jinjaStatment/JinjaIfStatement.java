@@ -5,8 +5,8 @@ import ast.HtmlContent;
 import ast.jinja.jinjaExpression.JinjaExpression;
 
 public class JinjaIfStatement extends JinjaStatement {
-    private JinjaExpression condition;
-    private HtmlContent htmlContent;
+    public JinjaExpression condition;
+    public HtmlContent htmlContent;
 
     public JinjaIfStatement(int line_number) {
         super("JinjaIfStatement", line_number);

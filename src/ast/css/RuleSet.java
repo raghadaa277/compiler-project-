@@ -4,8 +4,8 @@ import ast.ASTNode;
 import ast.Consts;
 
 public class RuleSet extends ASTNode {
-    private SelectorDeclaration selectorDeclaration;
-    private CssDeclarationList declarationList;
+    public SelectorDeclaration selectorDeclaration;
+    public CssDeclarationList declarationList;
     public RuleSet(int line_number) {
         super("RuleSet", line_number);
     }

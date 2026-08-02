@@ -4,8 +4,8 @@ import ast.Consts;
 import ast.HtmlContent;
 
 public class JinjaBlockStatement extends JinjaStatement {
-    private String blockName;
-    private HtmlContent htmlContent;
+    public String blockName;
+    public HtmlContent htmlContent;
     public JinjaBlockStatement(int line_number) {
         super("JinjaBlockStatement", line_number);
     }

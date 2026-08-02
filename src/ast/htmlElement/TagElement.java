@@ -6,7 +6,9 @@ import ast.tagContent.TagElementItem;
 import java.util.List;
 
 public class TagElement extends HtmlElement {
-    private List<TagElementItem> tags;
+    public List<TagElementItem> tags;
+    public String tagName;
+    public boolean isClosingTag;
 
     public TagElement(int line_number) {
         super("TagElement", line_number);

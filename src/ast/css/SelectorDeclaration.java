@@ -6,7 +6,7 @@ import java.util.List;
 
 public class SelectorDeclaration extends ASTNode {
 
-    private List<CssSelectorList> selectorLists;
+    public List<CssSelectorList> selectorLists;
 
     public SelectorDeclaration(int line_number) {
         super("SelectorDeclaration", line_number);
@@ -15,7 +15,16 @@ public class SelectorDeclaration extends ASTNode {
     public void setSelectorLists(List<CssSelectorList> selectorLists) {
         this.selectorLists = selectorLists;
     }
-
+    public String toSelectorString() {
+        StringBuilder sb = new StringBuilder();
+        if (selectorLists != null) {
+            for (int i = 0; i < selectorLists.size(); i++) {
+                if (i > 0) sb.append(", ");
+                sb.append(selectorLists.get(i).toSelectorString());
+            }
+        }
+        return sb.toString();
+    }
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

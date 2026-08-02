@@ -12,7 +12,7 @@ import java.util.*;
 
 public class ArgumentCountDetector extends ScopeAwareDetector {
 
-    // Maps function name -> expected parameter count, populated from scope tree
+
     private final Map<String, Integer> functionParamCount = new HashMap<>();
 
     @Override

@@ -5,9 +5,9 @@ import ast.HtmlContent;
 import ast.jinja.jinjaExpression.JinjaExpression;
 
 public class JinjaForStatement extends JinjaStatement {
-    private String id;
-    private HtmlContent htmlContent;
-    private JinjaExpression iterable;
+    public String id;
+    public HtmlContent htmlContent;
+    public JinjaExpression iterable;
 
     public JinjaForStatement(int line_number) {
         super("JinjaForStatement", line_number);
