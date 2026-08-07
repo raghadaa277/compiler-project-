@@ -3,7 +3,7 @@
 <h2>All Products</h2>
 <div class="product-grid">
     {% for p in products %}
-    <div class="product-card">
+    <div class="product-card" data-product-id="{{ p.id }}" data-product-name="{{ p.name }}" data-product-price="{{ p.price }}" data-product-details="{{ p.description }}" data-product-image="{{ p.img }}">
         <img src="{{ p.img }}" alt="product image">
         <h3>{{ p.name }}</h3>
         <p class="price">${{ p.price }}</p>

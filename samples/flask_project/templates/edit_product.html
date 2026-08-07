@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Edit Product</h2>
+<form method="POST" class="form">
+    <input type="hidden" name="id" id="edit-id" value="">
+
+    <label>Name</label>
+    <input type="text" name="name" id="edit-name" required>
+
+    <label>Price</label>
+    <input type="number" name="price" id="edit-price" required>
+
+    <label>Description</label>
+    <textarea name="description" id="edit-details" required></textarea>
+
+    <label>Specification</label>
+    <textarea name="specification" id="edit-specification"></textarea>
+
+    <label>Image URL (local path)</label>
+    <input type="text" name="img" id="edit-image" placeholder="/static/images/example.png">
+
+    <button type="submit" class="btn">Save Changes</button>
+</form>
+<a href="index.html" style="display:block;text-align:center;margin-top:15px;color:#666;">Cancel</a>
+{% endblock %}

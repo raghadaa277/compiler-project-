@@ -1,0 +1,21 @@
+.details-card {
+    display: flex;
+    gap: 30px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.details-card img {
+    width: 350px;
+    border-radius: 10px;
+}
+
+.info h2 {
+    margin-bottom: 10px;
+}
+
+.info h3 {
+    color: green;
+}

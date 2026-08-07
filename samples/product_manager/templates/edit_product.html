@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/add.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <h2>Edit Product</h2>
+
+    <form method="POST">
+
+        <input type="hidden" id="edit-id" value="">
+
+        <input type="text"
+               id="edit-name"
+               name="name"
+               placeholder="Product Name"
+               required>
+
+        <input type="number"
+               id="edit-price"
+               name="price"
+               placeholder="Product Price"
+               required>
+
+        <textarea id="edit-details"
+                  name="details"
+                  placeholder="Product Details"
+                  required></textarea>
+
+        <button type="submit">Save Changes</button>
+
+    </form>
+
+    <a href="index.html" style="display:block;text-align:center;margin-top:15px;color:#666;">Cancel</a>
+
+</div>
+
+{% endblock %}

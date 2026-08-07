@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<h2 class="page-title">All Products</h2>
+
+<div class="products-container">
+
+    {% for product in products %}
+
+    <div class="card" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}" data-product-price="{{ product.price }}" data-product-details="{{ product.details }}" data-product-image="{{ product.image }}">
+
+        <img src="{{ product.image }}" alt="product image">
+
+        <h3>{{ product.name }}</h3>
+
+        <p class="price">${{ product.price }}</p>
+
+        <div class="buttons">
+            <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                Details
+            </a>
+
+            <a class="delete-btn"
+               href="{{ url_for('delete_product', product_id=product.id) }}">
+                Delete
+            </a>
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
