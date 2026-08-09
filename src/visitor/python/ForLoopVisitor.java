@@ -25,9 +25,11 @@ public class ForLoopVisitor extends PythonParserBaseVisitor<ForLoop> {
     public ForLoop visitComplexForLoop(PythonParser.ComplexForLoopContext ctx) {
         ForLoop forLoop = new ForLoop(ctx.getStart().getLine());
         Atom atom = atomVisitor.visit(ctx.atom(0));
-        PythonExpression pythonExpression = pythonExpressionVisitor.visit(ctx.python_expr());
         forLoop.setVar(atom);
-        forLoop.setIter(pythonExpression);
+        if (ctx.python_expr() != null) {
+            PythonExpression pythonExpression = pythonExpressionVisitor.visit(ctx.python_expr());
+            forLoop.setIter(pythonExpression);
+        }
         if (ctx.condition() != null) {
             Condition condition = new ConditionVisitor().visit(ctx.condition());
             forLoop.setCondition(condition);

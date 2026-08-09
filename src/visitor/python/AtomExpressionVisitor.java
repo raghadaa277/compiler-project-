@@ -3,7 +3,7 @@ package visitor.python;
 import antlr.python.PythonParser;
 import antlr.python.PythonParserBaseVisitor;
 import ast.argsList.ArgumentsList;
-import ast.atom.Atom;
+import ast.atom.*;
 import ast.atomExpression.*;
 
 import java.util.ArrayList;
@@ -13,67 +13,33 @@ public class AtomExpressionVisitor extends PythonParserBaseVisitor<AtomExpressio
     private final AtomVisitor atomVisitor = new AtomVisitor();
 
     @Override
-    public AtomExpression visitListAccess(PythonParser.ListAccessContext ctx) {
-        ListAccess listAccess = new ListAccess(ctx.getStart().getLine());
-        Atom atom = atomVisitor.visit(ctx.atom());
-        listAccess.setVarName(atom.getValue().toString());
-        listAccess.setIndex(ctx.NUMBER().getText());
-
-        return listAccess;
-    }
-
-    @Override
-    public AtomExpression visitDictionaryAccess(PythonParser.DictionaryAccessContext ctx) {
-        DictionaryAccess dictionaryAccess = new DictionaryAccess(ctx.getStart().getLine());
-        Atom atom = atomVisitor.visit(ctx.atom());
-        dictionaryAccess.setVarName(atom.getValue().toString());
-        dictionaryAccess.setKey(ctx.STRING().getText());
-        return dictionaryAccess;
-    }
-
-    @Override
-    public AtomExpression visitAttributeAccess(PythonParser.AttributeAccessContext ctx) {
-        AttributeAccess attributeAccess = new AttributeAccess(ctx.getStart().getLine());
-        Atom atom = atomVisitor.visit(ctx.atom(0));
-        List<Atom> atomList = new ArrayList<>();
-        for (int i = 1; i < ctx.atom().size(); i++) {
-            Atom a = atomVisitor.visit(ctx.atom(i));
-            atomList.add(a);
-        }
-        attributeAccess.setVarName(atom.getValue().toString());
-        attributeAccess.setAttributes(atomList);
-        return attributeAccess;
-    }
-
-    @Override
     public AtomExpression visitMethodAccess(PythonParser.MethodAccessContext ctx) {
-        MethodAccess methodAccess = new MethodAccess(ctx.getStart().getLine());
-        Atom atom = atomVisitor.visit(ctx.atom());
-        List<AtomExpression> atomExpressions = new ArrayList<>();
-        for (int i = 0; i < ctx.atom_expr().size(); i++) {
-            AtomExpression atomExpression = visit(ctx.atom_expr(i));
-            atomExpressions.add(atomExpression);
+        AtomExpression target = visit(ctx.atom_expr(0));
+        MethodAccess methodAccess;
+        List<AtomExpression> calls;
+        if (target instanceof MethodAccess innerMa) {
+            methodAccess = innerMa;
+            calls = innerMa.getMethodCalls();
+            if (calls == null) {
+                calls = new ArrayList<>();
+                innerMa.setMethodCalls(calls);
+            }
+        } else {
+            methodAccess = new MethodAccess(ctx.getStart().getLine());
+            methodAccess.setVarName(ctx.atom_expr(0).getText());
+            calls = new ArrayList<>();
+            methodAccess.setMethodCalls(calls);
         }
-        methodAccess.setVarName(atom.getValue().toString());
-        methodAccess.setMethodCalls(atomExpressions);
+        AtomExpression call = visit(ctx.atom_expr(1));
+        calls.add(call);
         return methodAccess;
-    }
-
-    @Override
-    public AtomExpression visitObjectCreation(PythonParser.ObjectCreationContext ctx) {
-        ObjectCreation objectCreation = new ObjectCreation(ctx.getStart().getLine());
-        objectCreation.setVarName(ctx.CLASS_NAME().getText());
-        if (ctx.arglist() != null) {
-            ArgumentsList argumentsList = new ArgumentListVisitor().visit(ctx.arglist());
-            objectCreation.setArgumentsList(argumentsList);
-        }
-        return objectCreation;
     }
 
     @Override
     public AtomExpression visitFunctionCall(PythonParser.FunctionCallContext ctx) {
         FunctionCall functionCall = new FunctionCall(ctx.getStart().getLine());
-        functionCall.setVarName(ctx.NAME().getText());
+        String funcName = ctx.atom_expr().getText();
+        functionCall.setVarName(funcName);
         if (ctx.arglist() != null) {
             ArgumentsList argumentsList = new ArgumentListVisitor().visit(ctx.arglist());
             functionCall.setArgumentsList(argumentsList);
@@ -83,9 +49,42 @@ public class AtomExpressionVisitor extends PythonParserBaseVisitor<AtomExpressio
 
     @Override
     public AtomExpression visitSimpleVar(PythonParser.SimpleVarContext ctx) {
-        SimpleVariable simpleVariable = new SimpleVariable(ctx.getStart().getLine());
         Atom atom = atomVisitor.visit(ctx.atom());
+        if (atom.getValue() == null) {
+            SimpleVariable sv = new SimpleVariable(ctx.getStart().getLine());
+            sv.setVarName("None");
+            return sv;
+        }
+        String val = atom.getValue().toString();
+        if (val.startsWith("f\"") || val.startsWith("f'")) {
+            String inner = val.substring(val.indexOf('"') + 1, val.length() - 1);
+            return new FStringAtomExpression(ctx.getStart().getLine(), inner);
+        }
+        SimpleVariable simpleVariable = new SimpleVariable(ctx.getStart().getLine());
         simpleVariable.setVarName(atom.getValue().toString());
         return simpleVariable;
+    }
+
+    @Override
+    public AtomExpression visitSubscript(PythonParser.SubscriptContext ctx) {
+        Subscript subscript = new Subscript(ctx.getStart().getLine());
+        subscript.setTarget(visit(ctx.atom_expr()));
+        subscript.setIndex(ctx.python_expr().getText());
+        return subscript;
+    }
+
+    @Override
+    public AtomExpression visitSlice(PythonParser.SliceContext ctx) {
+        Subscript subscript = new Subscript(ctx.getStart().getLine());
+        subscript.setTarget(visit(ctx.atom_expr()));
+        StringBuilder sliceStr = new StringBuilder();
+        if (ctx.python_expr().size() > 0) sliceStr.append(ctx.python_expr(0).getText());
+        sliceStr.append(":");
+        if (ctx.python_expr().size() > 1) sliceStr.append(ctx.python_expr(1).getText());
+        if (ctx.python_expr().size() > 2) {
+            sliceStr.append(":").append(ctx.python_expr(2).getText());
+        }
+        subscript.setIndex(sliceStr.toString());
+        return subscript;
     }
 }

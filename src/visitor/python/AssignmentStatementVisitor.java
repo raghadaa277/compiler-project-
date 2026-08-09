@@ -80,7 +80,7 @@ public class AssignmentStatementVisitor extends PythonParserBaseVisitor<Assignme
 
         String name = extractVarName(var);
 
-        updateOrInsertSymbol(name, "Variable", value.toString());
+        updateOrInsertSymbol(name, "Variable", value.symbolTablePrint());
 
         return node;
     }
@@ -112,16 +112,15 @@ public class AssignmentStatementVisitor extends PythonParserBaseVisitor<Assignme
         node.setValue(value);
 
 
-        String attributeValue = (value.node_name != null && !value.node_name.isEmpty())
-                ? value.node_name
-                : value.getClass().getSimpleName();
+        String type = (value.node_name != null) ? value.node_name : "Expression";
+
 
         String name = extractVarName(var);
-        updateOrInsertSymbol(name, "Variable", attributeValue);
+
+        updateOrInsertSymbol(name, "Variable", value.node_name);
 
         return node;
     }
-
 
     @Override
     public AssignmentStatement visitArithmeticAssignStmt(PythonParser.ArithmeticAssignStmtContext ctx) {

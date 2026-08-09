@@ -4,9 +4,9 @@ import antlr.python.PythonParser;
 import antlr.python.PythonParserBaseVisitor;
 import ast.Statement;
 import ast.compundStmt.CompoundStatement;
+
 import java.util.ArrayList;
 import java.util.List;
-
 public class StatementVisitor extends PythonParserBaseVisitor<Statement> {
 
     private CompoundStatementVisitor compoundStatementVisitor;
@@ -18,23 +18,43 @@ public class StatementVisitor extends PythonParserBaseVisitor<Statement> {
     public StatementVisitor() {
         this.compoundStatementVisitor = new CompoundStatementVisitor(this);
     }
-    @Override
-    public Statement visitCompoundStatement(PythonParser.CompoundStatementContext ctx) {
-        Statement statement = new Statement(ctx.getStart().getLine());
+
+    private Statement buildFromCompoundStmts(List<PythonParser.Compound_stmtContext> stmtCtxs, int line) {
+        Statement statement = new Statement(line);
         List<CompoundStatement> compoundStatementList = new ArrayList<>();
-
-        if (ctx.compound_stmt() != null) {
-            CompoundStatement compStmt = compoundStatementVisitor.visit(ctx.compound_stmt());
-            compoundStatementList.add(compStmt);
+        boolean hasPass = false;
+        for (PythonParser.Compound_stmtContext stmtCtx : stmtCtxs) {
+            CompoundStatement cs = compoundStatementVisitor.visit(stmtCtx);
+            if (cs == null && stmtCtx instanceof PythonParser.PassStatementContext) {
+                hasPass = true;
+            } else if (cs != null) {
+                compoundStatementList.add(cs);
+            }
         }
-
         statement.setCompoundStatements(compoundStatementList);
+        if (hasPass && compoundStatementList.isEmpty()) {
+            statement.setPass(true);
+        }
         return statement;
     }
 
+    @Override
+    public Statement visitSimpleStatement(PythonParser.SimpleStatementContext ctx) {
+        return buildFromCompoundStmts(ctx.compound_stmt(), ctx.getStart().getLine());
+    }
 
     @Override
-    public Statement visitPassStatement(PythonParser.PassStatementContext ctx) {
+    public Statement visitSimpleSuite(PythonParser.SimpleSuiteContext ctx) {
+        return buildFromCompoundStmts(ctx.compound_stmt(), ctx.getStart().getLine());
+    }
+
+    @Override
+    public Statement visitCompoundSuite(PythonParser.CompoundSuiteContext ctx) {
+        return buildFromCompoundStmts(ctx.compound_stmt(), ctx.getStart().getLine());
+    }
+
+    @Override
+    public Statement visitPassSuite(PythonParser.PassSuiteContext ctx) {
         Statement statement = new Statement(ctx.getStart().getLine());
         statement.setPass(true);
         return statement;

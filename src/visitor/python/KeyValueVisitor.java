@@ -10,6 +10,7 @@ import ast.simpleExpr.SimpleExpression;
 
 public class KeyValueVisitor extends PythonParserBaseVisitor<KeyValue> {
     private final AtomVisitor atomVisitor = new AtomVisitor();
+    private final PythonExpressionVisitor pythonExprVisitor = new PythonExpressionVisitor();
 
     @Override
     public KeyValue visitAtomKeyValue(PythonParser.AtomKeyValueContext ctx) {
@@ -30,6 +31,24 @@ public class KeyValueVisitor extends PythonParserBaseVisitor<KeyValue> {
         simpleKeyValue.setValue(simpleExpression);
 
         return simpleKeyValue;
+    }
+
+    @Override
+    public KeyValue visitExprKeyValue(PythonParser.ExprKeyValueContext ctx) {
+        AtomKeyValue kv = new AtomKeyValue(ctx.getStart().getLine());
+        if (ctx.python_expr(0) != null) {
+            String keyText = ctx.python_expr(0).getText();
+            Atom keyAtom = new ast.atom.Name(ctx.getStart().getLine());
+            keyAtom.setValue(keyText);
+            kv.setKey(keyAtom);
+        }
+        if (ctx.python_expr(1) != null) {
+            String valText = ctx.python_expr(1).getText();
+            Atom valAtom = new ast.atom.Name(ctx.getStart().getLine());
+            valAtom.setValue(valText);
+            kv.setValue(valAtom);
+        }
+        return kv;
     }
 
 }

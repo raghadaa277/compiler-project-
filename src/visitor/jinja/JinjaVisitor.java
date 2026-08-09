@@ -6,6 +6,7 @@ import ast.ASTNode;
 import ast.jinja.JinjaArgumentsList;
 import ast.jinja.jinjaArg.JinjaArgument;
 import ast.jinja.jinjaCallExpr.JinjaVariableAccess;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,18 @@ public class JinjaVisitor extends HtmlParserBaseVisitor<ASTNode> {
     public JinjaVariableAccess visitJinjaVarAccessOnlyDef(HtmlParser.JinjaVarAccessOnlyDefContext ctx) {
         JinjaVariableAccess jinjaVariableAccess = new JinjaVariableAccess(ctx.start.getLine());
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(ctx.J_NAME(0));
-        for (int i = 1; i < ctx.J_NAME().size(); i++) {
-            stringBuilder.append(".").append(ctx.J_NAME(i));
+        List<TerminalNode> names = ctx.J_NAME();
+        List<TerminalNode> lengths = ctx.J_LENGTH();
+        int nameIdx = 0, lenIdx = 0;
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            if (ctx.getChild(i) instanceof TerminalNode) {
+                TerminalNode tn = (TerminalNode) ctx.getChild(i);
+                int type = tn.getSymbol().getType();
+                if (type == HtmlParser.J_NAME || type == HtmlParser.J_LENGTH) {
+                    if (stringBuilder.length() > 0) stringBuilder.append(".");
+                    stringBuilder.append(tn.getText());
+                }
+            }
         }
         jinjaVariableAccess.setDottedName(stringBuilder.toString());
         return jinjaVariableAccess;

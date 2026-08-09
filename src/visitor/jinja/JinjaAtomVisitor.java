@@ -45,4 +45,11 @@ public class JinjaAtomVisitor extends HtmlParserBaseVisitor<Atom> {
         name.setValue(ctx.J_NAME().getText());
         return name;
     }
+
+    @Override
+    public Atom visitJinjaLengthAtom(HtmlParser.JinjaLengthAtomContext ctx) {
+        Name name = new Name(ctx.start.getLine());
+        name.setValue(ctx.J_LENGTH().getText());
+        return name;
+    }
 }

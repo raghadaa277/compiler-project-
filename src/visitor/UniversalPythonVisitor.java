@@ -5,15 +5,15 @@ import antlr.python.PythonParserBaseVisitor;
 import ast.ASTNode;
 import ast.Imported;
 import ast.argsList.ArgumentsList;
-import ast.atom.Atom;
 import ast.atom.Bool;
+import ast.atomExpression.AtomExpression;
 import ast.complexExp.ListItems;
 import ast.compundStmt.GlobalStatement;
 import ast.functionDef.Decorator;
 import ast.functionDef.FunctionParameters;
 import ast.keyValue.KeyValue;
+import visitor.python.AtomExpressionVisitor;
 import visitor.python.ArgumentListVisitor;
-import visitor.python.AtomVisitor;
 import visitor.python.FunctionParametersVisitor;
 import visitor.python.KeyValueVisitor;
 
@@ -35,14 +35,13 @@ public class UniversalPythonVisitor extends PythonParserBaseVisitor<ASTNode> {
     @Override
     public ListItems visitListItems(PythonParser.ListItemsContext ctx) {
         ListItems listItems = new ListItems(ctx.getStart().getLine());
-        List<Atom> atomList = new ArrayList<>();
-        AtomVisitor atomVisitor = new AtomVisitor();
-        for (int i = 0; i < ctx.atom().size(); i++) {
-            Atom atom = atomVisitor.visit(ctx.atom(i));
-            atomList.add(atom);
+        List<AtomExpression> exprList = new ArrayList<>();
+        AtomExpressionVisitor atomExprVisitor = new AtomExpressionVisitor();
+        for (int i = 0; i < ctx.atom_expr().size(); i++) {
+            AtomExpression ae = atomExprVisitor.visit(ctx.atom_expr(i));
+            exprList.add(ae);
         }
-        listItems.setAtomList(atomList);
-
+        listItems.setItems(exprList);
         return listItems;
     }
 
@@ -95,7 +94,6 @@ public class UniversalPythonVisitor extends PythonParserBaseVisitor<ASTNode> {
     @Override
     public KeyValue visitKeyValuePairs(PythonParser.KeyValuePairsContext ctx) {
         KeyValueVisitor keyValueVisitor = new KeyValueVisitor();
-        // Dummy
         return keyValueVisitor.visit(ctx.key_value(0));
     }
 

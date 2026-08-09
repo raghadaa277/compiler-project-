@@ -1,20 +1,22 @@
-package visitor.css;
+package visitor.html;
 
-import antlr.css.CssParser;
-import antlr.css.CssParserBaseVisitor;
+import antlr.html.HtmlParser;
+import antlr.html.HtmlParserBaseVisitor;
 import ast.ASTNode;
 import ast.css.*;
 import ast.cssTerm.CssFunctionArguments;
 import ast.cssTerm.CssTerm;
 import ast.htmlElement.StyleSheet;
+import visitor.css.CssSelectorVisitor;
+import visitor.css.CssTermVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StyleSheetVisitor extends CssParserBaseVisitor<ASTNode> {
+public class HtmlStyleSheetVisitor extends HtmlParserBaseVisitor<ASTNode> {
 
     @Override
-    public StyleSheet visitStyleSheet(CssParser.StyleSheetContext ctx) {
+    public StyleSheet visitStyleSheet(HtmlParser.StyleSheetContext ctx) {
         StyleSheet styleSheet = new StyleSheet(ctx.getStart().getLine());
         List<RuleSet> ruleSetList = new ArrayList<>();
         for (int i = 0; i < ctx.ruleSet().size(); i++) {
@@ -26,7 +28,7 @@ public class StyleSheetVisitor extends CssParserBaseVisitor<ASTNode> {
     }
 
     @Override
-    public RuleSet visitCssRule(CssParser.CssRuleContext ctx) {
+    public RuleSet visitCssRule(HtmlParser.CssRuleContext ctx) {
         RuleSet ruleSet = new RuleSet(ctx.getStart().getLine());
         SelectorDeclaration selectorDeclaration = (SelectorDeclaration) visit(ctx.selector_decl());
         CssDeclarationList declarationList = (CssDeclarationList) visit(ctx.declarationList());
@@ -36,7 +38,7 @@ public class StyleSheetVisitor extends CssParserBaseVisitor<ASTNode> {
     }
 
     @Override
-    public SelectorDeclaration visitCssSelectorDeclaration(CssParser.CssSelectorDeclarationContext ctx) {
+    public SelectorDeclaration visitCssSelectorDeclaration(HtmlParser.CssSelectorDeclarationContext ctx) {
         SelectorDeclaration selectorDeclaration = new SelectorDeclaration(ctx.getStart().getLine());
         List<CssSelectorList> cssSelectorLists = new ArrayList<>();
         for (int i = 0; i < ctx.css_selector_list().size(); i++) {
@@ -48,9 +50,9 @@ public class StyleSheetVisitor extends CssParserBaseVisitor<ASTNode> {
     }
 
     @Override
-    public CssSelectorList visitCssSelectorList(CssParser.CssSelectorListContext ctx) {
+    public CssSelectorList visitCssSelectorList(HtmlParser.CssSelectorListContext ctx) {
         CssSelectorList cssSelectorList = new CssSelectorList(ctx.getStart().getLine());
-        CssSelectorVisitor cssSelectorVisitor = new CssSelectorVisitor();
+        HtmlCssSelectorVisitor cssSelectorVisitor = new HtmlCssSelectorVisitor();
         List<CssSelector> cssSelectors = new ArrayList<>();
         for (int i = 0; i < ctx.css_selector().size(); i++) {
             CssSelector cssSelector = cssSelectorVisitor.visit(ctx.css_selector(i));
@@ -61,9 +63,9 @@ public class StyleSheetVisitor extends CssParserBaseVisitor<ASTNode> {
     }
 
     @Override
-    public CssSelectorList visitCssDescendantSelector(CssParser.CssDescendantSelectorContext ctx) {
+    public CssSelectorList visitCssDescendantSelector(HtmlParser.CssDescendantSelectorContext ctx) {
         CssSelectorList cssSelectorList = new CssSelectorList(ctx.getStart().getLine());
-        CssSelectorVisitor cssSelectorVisitor = new CssSelectorVisitor();
+        HtmlCssSelectorVisitor cssSelectorVisitor = new HtmlCssSelectorVisitor();
         List<CssSelector> cssSelectors = new ArrayList<>();
         for (int i = 0; i < ctx.css_selector().size(); i++) {
             CssSelector cssSelector = cssSelectorVisitor.visit(ctx.css_selector(i));
@@ -74,7 +76,7 @@ public class StyleSheetVisitor extends CssParserBaseVisitor<ASTNode> {
     }
 
     @Override
-    public CssDeclarationList visitDeclarationBlock(CssParser.DeclarationBlockContext ctx) {
+    public CssDeclarationList visitDeclarationBlock(HtmlParser.DeclarationBlockContext ctx) {
         CssDeclarationList cssDeclarationList = new CssDeclarationList(ctx.start.getLine());
         List<CssDeclaration> declarations = new ArrayList<>();
         if (!ctx.declaration().isEmpty()) {
@@ -84,58 +86,43 @@ public class StyleSheetVisitor extends CssParserBaseVisitor<ASTNode> {
             }
         }
         cssDeclarationList.setDeclarations(declarations);
-
         return cssDeclarationList;
     }
 
     @Override
-    public CssDeclaration visitCssDeclaration(CssParser.CssDeclarationContext ctx) {
+    public CssDeclaration visitCssDeclaration(HtmlParser.CssDeclarationContext ctx) {
         CssDeclaration cssDeclaration = new CssDeclaration(ctx.start.getLine());
-        CssTermVisitor cssTermVisitor = new CssTermVisitor();
+        HtmlCssTermVisitor cssTermVisitor = new HtmlCssTermVisitor();
         List<CssTerm> terms = new ArrayList<>();
-        List<Boolean> commaBefore = new ArrayList<>();
-        CssParser.Css_valueContext valueCtx = ctx.css_value();
+        HtmlParser.Css_valueContext valueCtx = ctx.css_value();
         if (valueCtx != null) {
-            boolean expectComma = false;
-            for (int i = 0; i < valueCtx.getChildCount(); i++) {
-                Object child = valueCtx.getChild(i);
-                if (child instanceof CssParser.CsstermContext) {
-                    CssTerm term = cssTermVisitor.visit((CssParser.CsstermContext) child);
-                    terms.add(term);
-                    commaBefore.add(expectComma);
-                    expectComma = false;
-                } else if (child instanceof org.antlr.v4.runtime.tree.TerminalNode tn) {
-                    if (tn.getSymbol().getType() == CssParser.CSS_COMMA) {
-                        expectComma = true;
-                    }
-                }
+            for (int i = 0; i < valueCtx.cssterm().size(); i++) {
+                CssTerm cssTerm = cssTermVisitor.visit(valueCtx.cssterm(i));
+                terms.add(cssTerm);
             }
         }
         cssDeclaration.setCssTermList(terms);
-        cssDeclaration.setCommaBefore(commaBefore);
         cssDeclaration.setId(ctx.CSS_ID().getText());
-
         return cssDeclaration;
     }
 
-
     @Override
-    public CssFunctionArguments visitFunctionArguments(CssParser.FunctionArgumentsContext ctx) {
+    public CssFunctionArguments visitFunctionArguments(HtmlParser.FunctionArgumentsContext ctx) {
         CssFunctionArguments cssFunctionArguments = new CssFunctionArguments(ctx.start.getLine());
-        CssTermVisitor cssTermVisitor = new CssTermVisitor();
+        HtmlCssTermVisitor cssTermVisitor = new HtmlCssTermVisitor();
         List<CssTerm> cssTerms = new ArrayList<>();
         List<List<CssTerm>> groups = new ArrayList<>();
         List<CssTerm> currentGroup = new ArrayList<>();
         for (int i = 0; i < ctx.getChildCount(); i++) {
             Object child = ctx.getChild(i);
-            if (child instanceof CssParser.CsstermContext) {
-                CssTerm term = cssTermVisitor.visit((CssParser.CsstermContext) child);
+            if (child instanceof HtmlParser.CsstermContext) {
+                CssTerm term = cssTermVisitor.visit((HtmlParser.CsstermContext) child);
                 currentGroup.add(term);
                 cssTerms.add(term);
             } else if (child instanceof org.antlr.v4.runtime.tree.TerminalNode) {
                 org.antlr.v4.runtime.tree.TerminalNode tn =
                     (org.antlr.v4.runtime.tree.TerminalNode) child;
-                if (tn.getSymbol().getType() == CssParser.CSS_COMMA) {
+                if (tn.getSymbol().getType() == HtmlParser.CSS_COMMA) {
                     groups.add(currentGroup);
                     currentGroup = new ArrayList<>();
                 }

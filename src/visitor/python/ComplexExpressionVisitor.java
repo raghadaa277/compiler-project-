@@ -31,6 +31,9 @@ public class ComplexExpressionVisitor extends PythonParserBaseVisitor<ComplexExp
 
     @Override
     public ComplexExpression visitDictionaryLiteral(PythonParser.DictionaryLiteralContext ctx) {
+        if (ctx.dict_maker() == null) {
+            return new DictionaryLiteral(ctx.getStart().getLine());
+        }
         return visit(ctx.dict_maker());
     }
 
@@ -56,9 +59,21 @@ public class ComplexExpressionVisitor extends PythonParserBaseVisitor<ComplexExp
         }
         ListItems listItems = (ListItems) new UniversalPythonVisitor().visit(ctx.list_items());
 
-        listLiteral.setListItems(listItems.getAtomList());
+        listLiteral.setListItems(listItems.getItems());
 
         return listLiteral;
+    }
+
+    @Override
+    public ComplexExpression visitSetLiteral(PythonParser.SetLiteralContext ctx) {
+        SetLiteral setLiteral = new SetLiteral(ctx.getStart().getLine());
+        List<ast.atomExpression.AtomExpression> items = new ArrayList<>();
+        AtomExpressionVisitor atomExprVisitor = new AtomExpressionVisitor();
+        for (int i = 0; i < ctx.atom_expr().size(); i++) {
+            items.add(atomExprVisitor.visit(ctx.atom_expr(i)));
+        }
+        setLiteral.setItems(items);
+        return setLiteral;
     }
 
 

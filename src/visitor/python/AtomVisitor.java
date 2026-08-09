@@ -50,5 +50,18 @@ public class AtomVisitor extends PythonParserBaseVisitor<Atom> {
         return bool;
     }
 
+    @Override
+    public Atom visitTripleQuoteStringAtom(PythonParser.TripleQuoteStringAtomContext ctx) {
+        Str str = new Str(ctx.getStart().getLine());
+        str.setValue("\"\"\"" + ctx.TRIPLE_QUOTE_STRING().getText() + "\"\"\"");
+        return str;
+    }
+
+    @Override
+    public Atom visitFStringAtom(PythonParser.FStringAtomContext ctx) {
+        Str str = new Str(ctx.getStart().getLine());
+        str.setValue("f\"" + ctx.FSTRING().getText() + "\"");
+        return str;
+    }
 
 }

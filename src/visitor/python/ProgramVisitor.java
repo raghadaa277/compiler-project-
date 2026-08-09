@@ -14,7 +14,10 @@ public class ProgramVisitor extends PythonParserBaseVisitor<Program> {
         List<Statement> statements = new ArrayList<>();
         StatementVisitor statementVisitor = new StatementVisitor();
         for (int i = 0; i < ctx.statement().size(); i++) {
-            statements.add(statementVisitor.visit(ctx.statement(i)));
+            Statement s = statementVisitor.visit(ctx.statement(i));
+            if (s != null) {
+                statements.add(s);
+            }
         }
         return new Program(ctx.getStart().getLine(), statements);
     }

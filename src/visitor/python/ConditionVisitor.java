@@ -5,10 +5,7 @@ import antlr.python.PythonParserBaseVisitor;
 import ast.atom.Bool;
 import ast.comparisonOp.ComparisonOperator;
 import ast.compundStmt.PythonExpression;
-import ast.condition.BooleanCondition;
-import ast.condition.ComparisonExpression;
-import ast.condition.Condition;
-import ast.condition.NotExpression;
+import ast.condition.*;
 import visitor.UniversalPythonVisitor;
 
 import java.util.HashMap;
@@ -28,8 +25,25 @@ public class ConditionVisitor extends PythonParserBaseVisitor<Condition> {
     @Override
     public Condition visitNotExpression(PythonParser.NotExpressionContext ctx) {
         NotExpression notExpression = new NotExpression(ctx.getStart().getLine());
-        notExpression.setPythonExpression(pythonExpressionVisitor.visit(ctx.python_expr()));
+        Condition inner = visit(ctx.condition());
+        notExpression.setCondition(inner);
         return notExpression;
+    }
+
+    @Override
+    public Condition visitAndCondition(PythonParser.AndConditionContext ctx) {
+        AndCondition andCondition = new AndCondition(ctx.getStart().getLine());
+        andCondition.setLeft(visit(ctx.condition(0)));
+        andCondition.setRight(visit(ctx.condition(1)));
+        return andCondition;
+    }
+
+    @Override
+    public Condition visitOrCondition(PythonParser.OrConditionContext ctx) {
+        OrCondition orCondition = new OrCondition(ctx.getStart().getLine());
+        orCondition.setLeft(visit(ctx.condition(0)));
+        orCondition.setRight(visit(ctx.condition(1)));
+        return orCondition;
     }
 
     @Override
